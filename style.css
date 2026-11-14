@@ -1,0 +1,94 @@
+/* Custom Styles & Apple-like Smooth Enhancements */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Glassmorphism Navigation */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Marquee Infinite Animation */
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+.marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+}
+
+.marquee:hover {
+    animation-play-state: paused;
+}
+
+/* Fade In Up Scroll Animation Class */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-up.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Sidebar Active State Classes (<= 500px) */
+#mobileSidebar.active {
+    transform: translateX(0);
+}
+
+#sidebarOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Modal Active State Classes */
+#projectModal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#projectModal.active .modal-content {
+    transform: scale(1);
+}
+
+/* Custom Scrollbar for Modal Content */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.modal-content::-webkit-scrollbar-thumb {
+    background: #e4e4e7;
+    border-radius: 4px;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d8;
+}
+
+@keyframes scrollMarquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-marquee {
+    display: flex;
+    gap: 1.5rem; /* Setara dengan gap-6 */
+    animation: scrollMarquee 35s linear infinite;
+}
+
+/* Hanya pause animasi pada track yang sedang di-hover card-nya */
+.animate-marquee:hover {
+    animation-play-state: paused;
+}

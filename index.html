@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zumar Ramadhan — Portfolio</title>
+    <!-- Google Fonts & Tailwind CSS CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E73F1E',
+                        primaryHover: '#d03518',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @media (min-width: 768px) {
+            body {
+                cursor: default;
+            }
+            a, button, input, textarea, select, [role="button"] {
+                cursor: pointer;
+            }
+        }
+        .custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+            transform: translate(-50%, -50%);
+        }
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #E73F1E;
+            border-radius: 50%;
+        }
+        #cursor-outline {
+            width: 36px;
+            height: 36px;
+            border: 2px solid rgba(231, 63, 30, 0.4);
+            border-radius: 50%;
+            transition: transform 0.1s ease-out, width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+        }
+        body.cursor-hover #cursor-outline {
+            width: 60px;
+            height: 60px;
+            border-color: #E73F1E;
+            background-color: rgba(231, 63, 30, 0.05);
+        }
+
+        /* Keyframes untuk Animasi Melayang (Floating Elements) */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+        @keyframes floatFast {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-18px) rotate(-3deg); }
+        }
+        .animate-float-slow {
+            animation: floatSlow 5s ease-in-out infinite;
+        }
+        .animate-float-fast {
+            animation: floatFast 3.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-white text-zinc-900 font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Custom Smooth Cursor Elements -->
+    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
+    <div id="cursor-outline" class="custom-cursor hidden md:block"></div>
+
+    <!-- Floating Dynamic Navbar / Mobile Header -->
+    <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-4xl">
+        <nav class="glass-nav px-5 py-3 rounded-full flex items-center justify-between shadow-lg shadow-zinc-200/50 border border-zinc-200/80 bg-white/80 backdrop-blur-md">
+            <a href="#home" class="font-bold text-base sm:text-lg tracking-tight text-zinc-900 flex items-center gap-2">
+                Zumar<span class="text-primary">Ramadhan</span>
+            </a>
+            
+            <!-- Desktop Nav Links -->
+            <div class="hidden sm:flex items-center gap-6 text-sm font-medium text-zinc-600">
+                <a href="#about" class="hover:text-primary transition-colors">Tentang</a>
+                <a href="#skills" class="hover:text-primary transition-colors">Keahlian</a>
+                <a href="#portfolio" class="hover:text-primary transition-colors">Portofolio</a>
+                <a href="#experience" class="hover:text-primary transition-colors">Pengalaman</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="hidden sm:inline-block bg-primary hover:bg-primaryHover text-white text-sm font-semibold px-4 py-2 rounded-full transition-all duration-300 shadow-md shadow-primary/20">
+                    Hubungi Saya
+                </a>
+                
+                <!-- Hamburger Button -->
+                <button id="menuBtn" class="sm:hidden text-zinc-800 p-1.5 focus:outline-none" aria-label="Menu Toggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Sidebar Backdrop & Drawer -->
+    <div id="sidebarOverlay" class="fixed inset-0 z-50 bg-zinc-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 sm:hidden"></div>
+    <aside id="mobileSidebar" class="fixed top-0 right-0 z-50 w-[280px] h-full bg-white shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 sm:hidden">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-zinc-100 pb-4">
+                <span class="font-bold text-base text-zinc-900">Menu Navigasi</span>
+                <button id="closeSidebar" class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-700 font-bold">
+                    &times;
+                </button>
+            </div>
+            <nav class="flex flex-col space-y-4 font-semibold text-zinc-700">
+                <a href="#about" class="mobile-link hover:text-primary transition-colors py-1">Tentang</a>
+                <a href="#skills" class="mobile-link hover:text-primary transition-colors py-1">Keahlian</a>
+                <a href="#portfolio" class="mobile-link hover:text-primary transition-colors py-1">Portofolio</a>
+                <a href="#experience" class="mobile-link hover:text-primary transition-colors py-1">Pengalaman</a>
+            </nav>
+        </div>
+        <div class="pt-6 border-t border-zinc-100">
+            <a href="#contact" class="mobile-link block w-full bg-primary text-white text-center font-semibold py-3 rounded-xl shadow-md shadow-primary/20">
+                Hubungi Saya
+            </a>
+        </div>
+    </aside>
+
+    <!-- Hero Section dengan Ornamen Melayang -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-28 pb-16 px-5 sm:px-6 relative overflow-hidden">
+        
+        <!-- Background Decorative Blur Glows -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-orange-100/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+        <!-- ORNAMEN MELAYANG (Kiri & Kanan Hero) -->
+        <div class="absolute left-4 sm:left-12 md:left-20 top-28 sm:top-36 hidden sm:flex items-center gap-2.5 bg-white/90 backdrop-blur-md border border-zinc-200/80 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-slow z-10">
+            <div class="w-7 h-7 rounded-lg bg-orange-50 text-primary flex items-center justify-center font-bold text-xs">V</div>
+            <div class="text-left">
+                <div class="text-[11px] font-bold text-zinc-800">Visual Design</div>
+                <div class="text-[9px] text-zinc-400">Component active</div>
+            </div>
+        </div>
+
+        <div class="absolute right-4 sm:right-16 md:right-24 top-32 sm:top-40 hidden sm:flex items-center gap-2 bg-zinc-900 text-white px-3.5 py-2 rounded-2xl shadow-xl animate-float-fast z-10">
+            <svg class="w-4 h-4 text-primary fill-current" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            <div class="text-left text-xs">
+                <span class="font-bold text-orange-400">@Zumar:</span> <span class="text-zinc-200">"Sempurnakan spacing-nya!"</span>
+            </div>
+        </div>
+
+        <div class="absolute left-6 sm:left-16 md:left-32 bottom-28 sm:bottom-36 hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md border border-zinc-200/80 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-fast z-10">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            <span class="text-xs font-bold text-zinc-700">Vector Path Precision</span>
+        </div>
+
+        <div class="absolute right-6 sm:right-20 md:right-36 bottom-32 sm:bottom-40 hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md border border-zinc-200/80 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-slow z-10">
+            <div class="w-3.5 h-3.5 rounded-full bg-primary ring-2 ring-orange-100"></div>
+            <span class="text-xs font-bold text-zinc-700">#E73F1E (Primary)</span>
+        </div>
+
+        <!-- Konten Utama Hero -->
+        <div class="max-w-4xl mx-auto text-center space-y-6 fade-in-up z-20">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-100 text-primary text-xs font-semibold tracking-wide uppercase">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Tersedia untuk Proyek & Kolaborasi
+            </div>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 leading-[1.15]">
+                Halo, Saya <span class="text-primary">Muhammad Zumar Ramadhan</span>
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-zinc-600 max-w-2xl mx-auto font-normal leading-relaxed">
+                Graphic Designer, UI/UX Designer & Front-End Web Developer dengan pengalaman dalam mengembangkan solusi desain visual yang komunikatif, fungsional, dan berbasis riset hingga implementasi kodenya.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+                <a href="#portfolio" class="w-full sm:w-auto bg-primary hover:bg-primaryHover text-white font-semibold px-8 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-primary/25 text-center text-sm sm:text-base">
+                    Lihat Karya Pilihan
+                </a>
+                <a href="#contact" class="w-full sm:w-auto bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold px-8 py-3.5 rounded-2xl transition-all duration-300 text-center text-sm sm:text-base">
+                    Diskusi Proyek
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Running Text (Marquee Skills) -->
+    <div class="py-5 bg-zinc-900 text-white overflow-hidden whitespace-nowrap relative">
+        <div class="marquee flex gap-10 text-xs sm:text-sm font-semibold uppercase tracking-widest text-zinc-300">
+            <span>UI/UX Design</span>
+            <span>Graphic Design</span>
+            <span>AI Product UX</span>
+            <span>Social Media Specialist</span>
+            <span>Logo & Brand Identity</span>
+            <span>Advertising Design</span>
+            <span>Visual Design</span>
+            <span>Front-End Development</span>
+            <span>UI/UX Design</span>
+            <span>Graphic Design</span>
+            <span>AI Product UX</span>
+            <span>Social Media Specialist</span>
+            <span>Logo & Brand Identity</span>
+            <span>Advertising Design</span>
+            <span>Visual Design</span>
+            <span>Front-End Development</span>
+        </div>
+    </div>
+
+    <!-- QUOTE SECTION: Latar Belakang Putih & Elemen Fun Melayang -->
+    <section class="py-24 sm:py-32 px-5 sm:px-6 relative overflow-hidden bg-white text-zinc-900 border-y border-zinc-200/60">
+        
+        <!-- ELEMEN MELAYANG DI SEKITAR QUOTE SECTION -->
+        <!-- 1. Pixel Grid Inspection Badge (Kiri Atas) -->
+        <div class="absolute left-6 sm:left-16 md:left-24 top-12 sm:top-20 hidden sm:flex items-center gap-2 bg-white/90 border border-zinc-200 text-zinc-800 px-4 py-2.5 rounded-xl shadow-lg shadow-zinc-200/50 backdrop-blur-md animate-float-slow z-10 font-mono text-xs">
+            <div class="w-2.5 h-2.5 bg-primary rounded-sm animate-ping"></div>
+            <span>Zoom: 1600% (Pixel Perfect)</span>
+        </div>
+
+        <!-- 2. Bad Brief Warning Badge (Kanan Atas) -->
+        <div class="absolute right-6 sm:right-16 md:right-28 top-16 sm:top-24 hidden sm:flex items-center gap-2 bg-orange-50 border border-orange-100 text-primary px-4 py-2.5 rounded-xl shadow-lg shadow-zinc-200/50 backdrop-blur-md animate-float-fast z-10 text-xs font-semibold">
+            <svg class="w-4 h-4 text-primary fill-current" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+            <span>Warning: Invalid_Brief_Detected</span>
+        </div>
+
+        <!-- 3. Resolution Grid Badge (Kiri Bawah) -->
+        <div class="absolute left-8 sm:left-20 md:left-36 bottom-12 sm:bottom-20 hidden md:flex items-center gap-2 bg-white/90 border border-zinc-200 text-zinc-700 px-4 py-2 rounded-xl shadow-lg shadow-zinc-200/50 backdrop-blur-md animate-float-fast z-10 font-mono text-[11px]">
+            <span>1920x1080px @ 72 PPI</span>
+        </div>
+
+        <!-- 4. Designer Stamp Badge (Kanan Bawah) -->
+        <div class="absolute right-8 sm:right-24 md:right-40 bottom-16 sm:bottom-24 hidden md:flex items-center gap-2 bg-white/90 border border-zinc-200 text-primary px-4 py-2 rounded-xl shadow-lg shadow-zinc-200/50 backdrop-blur-md animate-float-slow z-10 text-xs font-bold">
+            <span>&lt;/ zmr.std &gt;</span>
+        </div>
+
+        <!-- Konten Utama Quote (Hanya Quote Saja) -->
+        <div class="max-w-4xl mx-auto text-center relative z-20">
+            <h2 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.2] font-mono uppercase">
+                <span class="text-zinc-900 hover:text-primary transition-colors cursor-default">Pixels</span> 
+                <span class="text-zinc-400 font-light lowercase">don't</span> 
+                <span class="text-zinc-900 hover:text-primary transition-colors cursor-default">lie.</span> 
+                <br class="hidden sm:inline">
+                <span class="text-primary underline decoration-zinc-200 underline-offset-8">Bad briefs</span> 
+                <span class="text-zinc-400 font-light lowercase">do.</span>
+            </h2>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 sm:py-24 px-5 sm:px-6 max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
+            <div class="space-y-5 fade-in-up">
+                <h2 class="text-xs font-bold tracking-widest text-primary uppercase">Tentang Saya</h2>
+                <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-900">
+                    Menerjemahkan Ide Kreatif Menjadi Visual & Sistem Front-End yang Nyaman.
+                </h3>
+                <p class="text-sm sm:text-base text-zinc-600 leading-relaxed">
+                    Berbasis di Semarang, Jawa Tengah, saya terbiasa menangani berbagai proyek mulai dari pengembangan antarmuka web (UI/UX & Front-End), produk berbasis AI, materi promosi, hingga identitas merek. Memiliki komitmen tinggi terhadap kualitas kode, detail visual, dan pengalaman pengguna.
+                </p>
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 pt-1">
+                    <div class="p-4 rounded-2xl bg-zinc-50 border border-zinc-100">
+                        <div class="text-xl sm:text-2xl font-bold text-primary">3+ Tahun</div>
+                        <div class="text-xs text-zinc-500 mt-0.5">Pengalaman</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-zinc-50 border border-zinc-100">
+                        <div class="text-xl sm:text-2xl font-bold text-primary">S1 Sistem Inf.</div>
+                        <div class="text-xs text-zinc-500 mt-0.5">Universitas Semarang</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-orange-50 to-zinc-50 p-6 sm:p-8 rounded-3xl border border-zinc-200/60 shadow-sm fade-in-up">
+                <h4 class="font-bold text-base sm:text-lg text-zinc-900 mb-4">Pendidikan & Latar Belakang</h4>
+                <div class="space-y-4">
+                    <div class="border-l-2 border-primary pl-4 py-1">
+                        <div class="text-sm font-bold text-zinc-900">Universitas Semarang</div>
+                        <div class="text-xs text-zinc-500">S1 Sistem Informasi (2024 - Sekarang)</div>
+                    </div>
+                    <div class="border-l-2 border-zinc-300 pl-4 py-1">
+                        <div class="text-sm font-bold text-zinc-900">SMK Raden Umar Said</div>
+                        <div class="text-xs text-zinc-500">Rekayasa Perangkat Lunak (2021 - 2024)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Tools Section -->
+    <section id="skills" class="py-16 sm:py-20 bg-zinc-50 px-5 sm:px-6 border-y border-zinc-200/60">
+        <div class="max-w-5xl mx-auto space-y-12">
+            <div class="text-center space-y-2.5">
+                <h2 class="text-xs font-bold tracking-widest text-primary uppercase">Keahlian & Perangkat</h2>
+                <h3 class="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">Kompetensi Profesional</h3>
+            </div>
+
+            <!-- Kompetensi Utama -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <!-- 1. UI/UX Design -->
+                <div class="p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group text-left">
+                    <div class="font-bold text-zinc-900 group-hover:text-primary transition-colors">UI/UX Design</div>
+                    <div class="text-xs text-zinc-500 mt-1">Figma & Prototyping</div>
+                </div>
+
+                <!-- 2. Front-End Development -->
+                <div class="p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group text-left">
+                    <div class="font-bold text-zinc-900 group-hover:text-primary transition-colors">Front-End Development</div>
+                    <div class="text-xs text-zinc-500 mt-1">React, Next.js & Tailwind</div>
+                </div>
+
+                <!-- 3. Visual Branding -->
+                <div class="p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group text-left">
+                    <div class="font-bold text-zinc-900 group-hover:text-primary transition-colors">Visual Branding</div>
+                    <div class="text-xs text-zinc-500 mt-1">Logo & Brand Identity</div>
+                </div>
+
+                <!-- 4. Social Media Specialist -->
+                <div class="p-5 sm:p-6 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group text-left">
+                    <div class="font-bold text-zinc-900 group-hover:text-primary transition-colors">Social Media Specialist</div>
+                    <div class="text-xs text-zinc-500 mt-1">Feed, Story & Ads</div>
+                </div>
+            </div>
+
+            <!-- Bagian Software & Perangkat Kerja -->
+            <div class="pt-6 border-t border-zinc-200/60 space-y-6">
+                <div class="text-center space-y-1.5">
+                    <h4 class="text-sm font-bold tracking-wide text-zinc-800 uppercase">Software & Tools Sehari-hari</h4>
+                    <p class="text-xs text-zinc-500">Perangkat penunjang desain, riset, kolaborasi, dan manajemen proyek.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 max-w-5xl mx-auto">
+                    <!-- Figma -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Fg</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Figma</div>
+                            <div class="text-[11px] text-zinc-500">UI/UX Tools</div>
+                        </div>
+                    </div>
+                    <!-- Canva -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Cv</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Canva</div>
+                            <div class="text-[11px] text-zinc-500">Graphic Design</div>
+                        </div>
+                    </div>
+                    <!-- Meta Business -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Mb</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Meta Business</div>
+                            <div class="text-[11px] text-zinc-500">Ads Management</div>
+                        </div>
+                    </div>
+                    <!-- Lark -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Lk</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Lark</div>
+                            <div class="text-[11px] text-zinc-500">Task & Workspace</div>
+                        </div>
+                    </div>
+                    <!-- Google Meet -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Gm</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Google Meet</div>
+                            <div class="text-[11px] text-zinc-500">Meeting & Sync</div>
+                        </div>
+                    </div>
+                    <!-- Google Studio -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Gs</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Google Studio</div>
+                            <div class="text-[11px] text-zinc-500">Data & Creative</div>
+                        </div>
+                    </div>
+                    <!-- Pinterest -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Pi</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Pinterest</div>
+                            <div class="text-[11px] text-zinc-500">Visual Inspiration</div>
+                        </div>
+                    </div>
+                    <!-- Dribbble -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Dr</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Dribbble</div>
+                            <div class="text-[11px] text-zinc-500">Design Portfolio</div>
+                        </div>
+                    </div>
+                    <!-- Mobbin -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Mo</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Mobbin</div>
+                            <div class="text-[11px] text-zinc-500">UI/UX Reference</div>
+                        </div>
+                    </div>
+                    <!-- Behance -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Bh</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Behance</div>
+                            <div class="text-[11px] text-zinc-500">Creative Showcase</div>
+                        </div>
+                    </div>
+                    <!-- Visual Studio Code -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Vs</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Visual Studio Code</div>
+                            <div class="text-[11px] text-zinc-500">Text Editor</div>
+                        </div>
+                    </div>
+                    <!-- Anti Gravity -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">An</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Antigravity</div>
+                            <div class="text-[11px] text-zinc-500">Text Editor</div>
+                        </div>
+                    </div>
+                    <!-- Animos -->
+                    <div class="p-4 bg-white rounded-2xl border border-zinc-200/85 shadow-sm hover:border-primary transition-all group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">Am</div>
+                        <div>
+                            <div class="text-xs font-bold text-zinc-900 group-hover:text-primary transition-colors">Animos</div>
+                            <div class="text-[11px] text-zinc-500">Motion</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Portfolio / Showcase Gallery Section -->
+    <section id="portfolio" class="py-20 sm:py-24 px-5 sm:px-6 max-w-6xl mx-auto">
+        <div class="text-center space-y-4 mb-10 sm:mb-12">
+            <h2 class="text-xs font-bold tracking-widest text-primary uppercase">Galeri Karya</h2>
+            <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-900">Pilihan Proyek Terbaik</h3>
+            <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto">Eksplorasi hasil karya desain grafis, UI/UX, Front-End Development, hingga manajemen media sosial.</p>
+            
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <button class="filter-btn active px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-primary text-white transition-all shadow-sm" data-filter="all">Semua</button>
+                <button class="filter-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-all" data-filter="uiux">UI/UX Design</button>
+                <button class="filter-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-all" data-filter="branding">Branding & Logo</button>
+                <button class="filter-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-all" data-filter="social">Social Media</button>
+            </div>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            
+            <!-- Item 1: SiapResmi -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase - Galeri Utama - SiapResmi.png" alt="Pratinjau Antarmuka SiapResmi AI Agent Legalitas UMKM di Figma" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="SiapResmi — AI Agent Legalitas UMKM"
+                            data-category="UI/UX Design (Figma)"
+                            data-desc="Banyak pelaku UMKM di sekitar kita memiliki niat besar untuk mengembangkan usaha, namun sering kali terhenti bukan karena produknya kurang bagus, melainkan terjebak dalam labirin birokrasi legalitas seperti NIB, PIRT, atau sertifikat halal. Platform berbasis AI Agent ini dirancang agar pelaku UMKM tidak perlu pusing mengisi formulir birokrasi yang rumit."
+                            data-tools="Figma, AI Agent UX, RAG Workflow, Speech-to-Text"
+                            data-image="assets/Showcase - Modal Detail - SiapResmi.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • AI Product</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">SiapResmi: AI Legalitas UMKM</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Menyusun jalur legalitas usaha UMKM dari cerita sehari-hari menggunakan AI Agent.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="SiapResmi — AI Agent Legalitas UMKM"
+                        data-category="UI/UX Design (Figma)"
+                        data-desc="Banyak pelaku UMKM di sekitar kita memiliki niat besar untuk mengembangkan usaha, namun sering kali terhenti bukan karena produknya kurang bagus, melainkan terjebak dalam labirin birokrasi legalitas seperti NIB, PIRT, atau sertifikat halal. Platform berbasis AI Agent ini dirancang agar pelaku UMKM tidak perlu pusing mengisi formulir birokrasi yang rumit."
+                        data-tools="Figma, AI Agent UX, RAG Workflow, Speech-to-Text"
+                        data-image="assets/Showcase - Modal Detail - SiapResmi.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 2: Coffee Shop -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-CoffeeShop.png" alt="Pratinjau UI/UX Website Coffee Shop Estetik & Profesional di Figma" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Authentic Indonesian Coffee — Website Coffee Shop"
+                            data-category="UI/UX Design (Figma)"
+                            data-desc="Industri kedai kopi lokal sering kali terjebak dalam desain web generik. Website ini dirancang dengan pendekatan minimalis modern, bold typography, dan palet warna hangat bernuansa biji kopi autentik."
+                            data-tools="Figma, Typography & Color System, Visual Hierarchy, Prototyping"
+                            data-image="assets/Showcase-ModalDetail-CoffeeShop.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Web Aesthetics</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Website Coffee Shop Estetik</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Membawa brand coffee shop lokal tampil lebih percaya diri, berani, dan profesional.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Authentic Indonesian Coffee — Website Coffee Shop"
+                        data-category="UI/UX Design (Figma)"
+                        data-desc="Industri kedai kopi lokal..."
+                        data-tools="Figma, Typography & Color System, Visual Hierarchy, Prototyping"
+                        data-image="coffeeshop.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 3: Bea Cukai -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-BeaCukai.png" alt="Pratinjau UI/UX Website Profil Kantor Bea Cukai Kudus" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Website Profil Kantor Bea Cukai Kudus"
+                            data-category="UI/UX Design"
+                            data-desc="Sebagai instansi pemerintah yang berinteraksi langsung dengan masyarakat dan pelaku industri di Kudus, Kantor Bea Cukai memerlukan kehadiran digital yang tidak hanya informatif, tetapi juga mudah diakses oleh publik. Proyek perancangan ulang antarmuka dan pengalaman pengguna (UI/UX) untuk website profil instansi ini berfokus pada misi untuk menjembatani penyampaian informasi secara transparan, cepat, dan efisien. Melalui riset mendalam, pemetaan arsitektur informasi (information architecture), serta pengujian purwarupa di Figma, tata letak halaman dirancang agar bersih, terstruktur, dan ramah pengguna dari berbagai kalangan."
+                            data-tools="Figma, UI/UX Research, Prototyping"
+                            data-image="assets/Showcase-ModalDetail-BeaCukai.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Web Profile</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Website Profil Kantor Bea Cukai Kudus</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Perancangan antarmuka dan pengalaman pengguna untuk platform profil instansi.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Website Profil Kantor Bea Cukai Kudus"
+                        data-category="UI/UX Design"
+                        data-desc="Perancangan antarmuka..."
+                        data-tools="Figma, UI/UX Research, Prototyping"
+                        data-image="beacukai.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 4: Nusantara -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Nusantara.png" alt="Pratinjau Nusantara Destinations" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Nusantara Destinations"
+                            data-category="UI/UX Design"
+                            data-desc="Platform digital imersif yang merayakan keindahan destinasi wisata, warisan budaya, dan kalender event nusantara secara terpusat."
+                            data-tools="Figma, UI/UX Research, Prototyping"
+                            data-image="assets/Showcase-ModalDetail-Nusantara.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Web Destination</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Nusantara Destinations</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Platform digital imersif yang merayakan keindahan destinasi wisata dan budaya nusantara.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Nusantara Destinations"
+                        data-category="UI/UX Design"
+                        data-desc="Platform digital imersif..."
+                        data-tools="Figma, UI/UX Research, Prototyping"
+                        data-image="assets/Showcase-ModalDetail-Nusantara.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 5: DailyCollege -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-DailyCollage.png" alt="Pratinjau DailyCollage" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="DailyCollege — Student Productivity"
+                            data-category="UI/UX Design"
+                            data-desc="Menjadi mahasiswa rantau sekaligus anak kos sering kali menghadirkan tantangan tersendiri dalam menyeimbangkan kesibukan akademik, deadline tugas yang padat, serta pengelolaan keuangan harian yang ketat. Sering kali, mahasiswa harus menggunakan banyak aplikasi terpisah untuk mencatat jadwal, mengatur tugas, menulis catatan kuliah, dan memantau pengeluaran bulanan. Berangkat dari keresahan tersebut, DailyCollege dirancang sebagai solusi all-in-one dalam bentuk dashboard web intuitif yang menyatukan seluruh kebutuhan esensial mahasiswa. Melalui riset alur kerja harian mahasiswa, antarmuka ini dikembangkan di Figma dengan pendekatan desain yang terstruktur dan ramah pengguna."
+                            data-tools="Figma, UI/UX Research, Prototyping"
+                            data-image="assets/Showcase-ModalDetail-DailyCollage.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Web Productivity</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">DailyCollege — Student Productivity</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Platform manajemen harian mahasiswa untuk mengelola jadwal kuliah, pelacakan tugas, pencatatan keuangan anak kos, hingga fitur catatan terpusat dalam satu antarmuka yang bersih.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="DailyCollege — Student Productivity"
+                        data-category="UI/UX Design"
+                        data-desc="Platform digital imersif..."
+                        data-tools="Figma, UI/UX Research, Prototyping"
+                        data-image="assets/Showcase-ModalDetail-DailyCollage.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: Prodi Sistem Informasi USM Social Media -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="social">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Sosmed-SI.png" alt="Pratinjau Sosmed Prodi SI USM" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Prodi Sistem Informasi USM — Social Media Specialist & Campaign"
+                            data-category="Social Media Specialist"
+                            data-desc="Pengelolaan media sosial resmi Program Studi Sistem Informasi USM secara menyeluruh. Bertanggung jawab mulai dari pembuatan desain visual feed yang interaktif, manajemen konten bulanan, penulisan caption yang komunikatif, proses publikasi, hingga optimalisasi kampanye Meta Ads untuk menjangkau calon mahasiswa baru."
+                            data-tools="Figma, Meta Ads Manager, Copywriting"
+                            data-image="assets/Showcase-ModalDetail-Sosmed-SI.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Social Media Specialist</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Prodi Sistem Informasi USM — Social Media & Campaign</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Manajemen konten, desain feed, penulisan caption, jadwal publikasi, hingga kampanye Meta Ads.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Prodi Sistem Informasi USM — Social Media Specialist & Campaign"
+                        data-category="Social Media Specialist"
+                        data-desc="Pengelolaan media sosial resmi Program Studi Sistem Informasi USM secara menyeluruh. Bertanggung jawab mulai dari pembuatan desain visual feed yang interaktif, manajemen konten bulanan, penulisan caption yang komunikatif, proses publikasi, hingga optimalisasi kampanye Meta Ads untuk menjangkau calon mahasiswa baru."
+                        data-tools="Figma, Meta Ads Manager, Copywriting"
+                        data-image="assets/Showcase-ModalDetail-Sosmed-SI.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: Jobind.id Social Media -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="social">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Sosmed-Jobind.png" alt="Pratinjau Sosmed Jobind.id" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Jobind.id — Social Media Specialist & Content Strategy"
+                            data-category="Social Media Specialist"
+                            data-desc="Pengelolaan strategi media sosial profesional untuk platform karier Jobind.id. Bertanggung jawab penuh dalam menyusun content plan bulanan, merancang desain visual feed yang menarik, mengatur jadwal publikasi (scheduling), hingga memproduksi materi konten iklan (ads) untuk meningkatkan brand awareness dan engagement."
+                            data-tools="Figma, Content Planning, Social Media Analytics, Ads Design"
+                            data-image="assets/Showcase-ModalDetail-Sosmed-Jobind.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Social Media Specialist</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Jobind.id — Social Media & Content Strategy</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Penyusunan content plan, desain feed interaktif, jadwal publikasi, hingga pembuatan konten iklan.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Jobind.id — Social Media Specialist & Content Strategy"
+                        data-category="Social Media Specialist"
+                        data-desc="Pengelolaan strategi media sosial profesional untuk platform karier Jobind.id. Bertanggung jawab penuh dalam menyusun content plan bulanan, merancang desain visual feed yang menarik, mengatur jadwal publikasi (scheduling), hingga memproduksi materi konten iklan (ads) untuk meningkatkan brand awareness dan engagement."
+                        data-tools="Figma, Content Planning, Social Media Analytics, Ads Design"
+                        data-image="assets/Showcase-ModalDetail-Sosmed-Jobind.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 5: Vistoria Digital Teknologi -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="branding">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Logo-Vistoria.png" alt="Pratinjau Vistoria Digital Teknologi" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Vistoria Digital Teknologi — Logo Mark & Identity"
+                            data-category="Branding & Logo"
+                            data-desc="Perancangan identitas visual dan logo mark berkarakter modern yang merepresentasikan inovasi serta solusi teknologi masa depan. Logo Mark membentuk siluet huruf V dengan garis tegas dan keselarasan teknologi."
+                            data-tools="Figma, Adobe Illustrator"
+                            data-image="assets/Showcase-ModalDetail-Logo-Vistoria.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Branding & Logo</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Vistoria Digital Teknologi — Logo Mark & Identity</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Perancangan identitas visual dan logo mark berkarakter modern yang merepresentasikan inovasi teknologi.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Vistoria Digital Teknologi — Logo Mark & Identity"
+                        data-category="Branding & Logo"
+                        data-desc="Perancangan identitas visual..."
+                        data-tools="Figma, Adobe Illustrator"
+                        data-image="assets/Showcase-ModalDetail-Logo-Vistoria.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item 6: KS Furniture -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="branding">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Logo-Furniture.png" alt="Pratinjau KS Furniture" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="KS Furniture — Logo Mark & Brand Identity"
+                            data-category="Branding & Logo"
+                            data-desc="Perancangan identitas merek dan logo kustom untuk perusahaan furniture dengan konsep kenyamanan, kemewahan, dan sentuhan elegan yang selaras dengan material kayu berkualitas."
+                            data-tools="Figma, Adobe Illustrator"
+                            data-image="assets/Showcase-ModalDetail-Logo-Furniture.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Branding & Logo</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">KS Furniture — Logo Mark & Brand Identity</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Perancangan identitas merek dan logo kustom untuk perusahaan furniture dengan konsep kenyamanan dan elegan.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="KS Furniture — Logo Mark & Brand Identity"
+                        data-category="Branding & Logo"
+                        data-desc="Perancangan identitas merek..."
+                        data-tools="Figma, Adobe Illustrator"
+                        data-image="assets/Showcase-ModalDetail-Logo-Furniture.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+            <!-- Item: Firdaus Collection -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="social">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Sosmed-FC.png" alt="Pratinjau Firdaus Collection" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Firdaus Collection — Social Media Specialist & Digital Marketing"
+                            data-category="Social Media & Digital Marketing"
+                            data-desc="Pengelolaan strategi pemasaran digital secara menyeluruh untuk bisnis tas souvenir. Mencakup penyusunan content plan bulanan, pembuatan desain feed yang interaktif, pemotretan katalog produk, penulisan caption persuasif, hingga pengelolaan kampanye iklan Meta Ads."
+                            data-tools="Figma, Meta Ads Manager"
+                            data-image="assets/Showcase-ModalDetail-Sosmed-FC.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Social Media & Marketing</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Firdaus Collection — Social Media Specialist & Digital Marketing</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Strategi konten media sosial, pemotretan katalog produk tas souvenir, hingga optimalisasi Meta Ads.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Firdaus Collection — Social Media Specialist & Digital Marketing"
+                        data-category="Social Media & Digital Marketing"
+                        data-desc="Pengelolaan strategi pemasaran digital secara menyeluruh untuk bisnis tas souvenir. Mencakup penyusunan content plan bulanan, pembuatan desain feed yang interaktif, pemotretan katalog produk, penulisan caption persuasif, hingga pengelolaan kampanye iklan Meta Ads."
+                        data-tools="Figma, Meta Ads Manager"
+                        data-image="assets/Showcase-ModalDetail-Sosmed-FC.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: Digivana Company Profile -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-UI-Digivana.png" alt="Pratinjau Digivana Company Profile" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="PT Digivana Solusi Digital — SaaS Company Profile & Web UI/UX"
+                            data-category="UI/UX Design • Web Corporate"
+                            data-desc="Perancangan antarmuka website Company Profile yang modern, bersih, dan profesional untuk PT Digivana Solusi Digital, perusahaan teknologi asal Semarang yang berfokus pada pengembangan produk Software as a Service (SaaS). Desain ini dirancang untuk menonjolkan kredibilitas perusahaan, portofolio produk digital, serta memberikan pengalaman navigasi yang intuitif bagi klien bisnis maupun enterprise."
+                            data-tools="Figma, UI/UX Research, Corporate Web Design, Prototyping"
+                            data-image="assets/Showcase-ModalDetail-UI-Digivana.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Web Corporate</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">PT Digivana Solusi Digital — SaaS Company Profile</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Desain antarmuka website company profile profesional untuk perusahaan teknologi asal Semarang yang berfokus pada inovasi produk SaaS.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="PT Digivana Solusi Digital — SaaS Company Profile & Web UI/UX"
+                        data-category="UI/UX Design • Web Corporate"
+                        data-desc="Perancangan antarmuka website Company Profile yang modern, bersih, dan profesional untuk PT Digivana Solusi Digital, perusahaan teknologi asal Semarang yang berfokus pada pengembangan produk Software as a Service (SaaS). Desain ini dirancang untuk menonjolkan kredibilitas perusahaan, portofolio produk digital, serta memberikan pengalaman navigasi yang intuitif bagi klien bisnis maupun enterprise."
+                        data-tools="Figma, UI/UX Research, Corporate Web Design, Prototyping"
+                        data-image="assets/Showcase-ModalDetail-UI-Digivana.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: NUVERA Parfum -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="branding">
+                <div class="aspect-[4/3] bg-zinc-950 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Logo-Nuvera.png" alt="Pratinjau NUVERA Parfum" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="NUVERA — Luxury Perfume Brand Identity & Logo Mark"
+                            data-category="Branding & Logo"
+                            data-desc="Perancangan identitas visual dan logo mark eksklusif untuk NUVERA, sebuah brand parfum premium. Mengusung konsep visual yang elegan dengan latar belakang hitam pekat dan aksen logo mark berwarna emas (gold), memancarkan kesan mewah, misterius, dan kelas atas."
+                            data-tools="Figma"
+                            data-image="assets/Showcase-ModalDetail-Logo-Nuvera.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Branding & Logo</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">NUVERA — Luxury Perfume Brand Identity & Logo Mark</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Perancangan identitas visual parfum premium berlatar hitam elegan dengan aksen logo mark gold.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="NUVERA — Luxury Perfume Brand Identity & Logo Mark"
+                        data-category="Branding & Logo"
+                        data-desc="Perancangan identitas visual dan logo mark eksklusif untuk NUVERA, sebuah brand parfum premium. Mengusung konsep visual yang elegan dengan latar belakang hitam pekat dan aksen logo mark berwarna emas (gold), memancarkan kesan mewah, misterius, dan kelas atas."
+                        data-tools="Figma"
+                        data-image="assets/Showcase-ModalDetail-Logo-Nuvera.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Item: SmartParking Mobile App -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-SmartParking.png" alt="Pratinjau SmartParking Mobile App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="SmartParking Mobile App — Smart City Parking Solution"
+                            data-category="UI/UX Design • Mobile App"
+                            data-desc="Desain antarmuka aplikasi mobile cerdas untuk mencari, melakukan pemesanan (booking) slot, hingga pembayaran tiket parkir secara digital di berbagai titik strategis Kota Semarang, mengurangi kemacetan akibat pengendara yang berputar-putar mencari parkir."
+                            data-tools="Figma, UI/UX Research, Mobile Prototyping, User Flow"
+                            data-image="assets/Showcase-ModalDetail-SmartParking.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Mobile App</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">SmartParking Mobile App — Kota Semarang</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Aplikasi mobile intuitif untuk mencari titik kosong, booking slot, hingga pembayaran parkir praktis di Semarang.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="SmartParking Mobile App — Smart City Parking Solution"
+                        data-category="UI/UX Design • Mobile App"
+                        data-desc="Desain antarmuka aplikasi mobile cerdas untuk mencari, melakukan pemesanan (booking) slot, hingga pembayaran tiket parkir secara digital di berbagai titik strategis Kota Semarang, mengurangi kemacetan akibat pengendara yang berputar-putar mencari parkir."
+                        data-tools="Figma, UI/UX Research, Mobile Prototyping, User Flow"
+                        data-image="assets/Showcase-ModalDetail-SmartParking.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: SkyVera Digital Products -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="social">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Sosmed-Skyvera.png" alt="Pratinjau SkyVera Digital Products" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="SkyVera — Social Media Manager & Digital Product Marketing"
+                            data-category="Social Media & Digital Product"
+                            data-desc="Pengelolaan strategi media sosial dan pemasaran digital untuk SkyVera, platform digital product (via Lynkid) yang menyediakan berbagai template esensial seperti trading journal, personal finance tracker, dan tools produktivitas lainnya. Bertanggung jawab dalam merancang content plan, visual promosi, hingga kampanye konversi."
+                            data-tools="Figma, Instagram Marketing, Lynkid Ecosystem"
+                            data-image="assets/Showcase-ModalDetail-Sosmed-Skyvera.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Social Media & Digital Product</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">SkyVera — Social Media Manager (Digital Templates)</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Strategi media sosial dan promosi produk digital seperti journal trading & finance tracker.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="SkyVera — Social Media Manager & Digital Product Marketing"
+                        data-category="Social Media & Digital Product"
+                        data-desc="Pengelolaan strategi media sosial dan pemasaran digital untuk SkyVera, platform digital product (via Lynkid) yang menyediakan berbagai template esensial seperti trading journal, personal finance tracker, dan tools produktivitas lainnya. Bertanggung jawab dalam merancang content plan, visual promosi, hingga kampanye konversi."
+                        data-tools="Figma, Instagram Marketing, Lynkid Ecosystem"
+                        data-image="assets/Showcase-ModalDetail-Sosmed-Skyvera.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: Emoquell Mental Health App -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="uiux">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-UI-Emoquell.png" alt="Pratinjau Emoquell Mobile App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="Emoquell — Mental Health & Anti-Bullying Support App"
+                            data-category="UI/UX Design • Mobile App"
+                            data-desc="Perancangan antarmuka aplikasi mobile kesehatan mental yang berfokus pada empati dan pemulihan emosional. Emoquell menyediakan ruang aman, pelacak suasana hati (mood tracker), sesi konseling, serta modul dukungan khusus bagi pengguna yang sedang mengalami atau memulihkan diri dari dampak bullying."
+                            data-tools="Figma, UI/UX Research, Empathy Mapping, Mobile Prototyping"
+                            data-image="assets/Showcase-ModalDetail-UI-Emoquell.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">UI/UX Design • Mobile App</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">Emoquell — Mental Health & Anti-Bullying Support App</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Aplikasi mobile pendukung kesehatan mental dengan ruang aman khusus dan penanganan bagi korban bullying.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="Emoquell — Mental Health & Anti-Bullying Support App"
+                        data-category="UI/UX Design • Mobile App"
+                        data-desc="Perancangan antarmuka aplikasi mobile kesehatan mental yang berfokus pada empati dan pemulihan emosional. Emoquell menyediakan ruang aman, pelacak suasana hati (mood tracker), sesi konseling, serta modul dukungan khusus bagi pengguna yang sedang mengalami atau memulihkan diri dari dampak bullying."
+                        data-tools="Figma, UI/UX Research, Empathy Mapping, Mobile Prototyping"
+                        data-image="assets/Showcase-ModalDetail-UI-Emoquell.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item: IPNU & IPPNU Jati Kulon Social Media -->
+            <div class="portfolio-item group bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" data-category="social">
+                <div class="aspect-[4/3] bg-zinc-100 relative overflow-hidden flex items-center justify-center border-b border-zinc-100">
+                    <img src="assets/Showcase-GaleriUtama-Sosmed-Ipnu.png" alt="Pratinjau Sosmed IPNU IPPNU Jati Kulon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-zinc-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="detail-btn bg-white text-zinc-900 text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-primary hover:text-white transition-colors"
+                            data-title="PR IPNU & IPPNU Jati Kulon — Social Media Management"
+                            data-category="Social Media Management"
+                            data-desc="Pengelolaan media sosial resmi Pimpinan Ranting Ikatan Pelajar Nahdlatul Ulama (IPNU) dan Ikatan Pelajar Putri Nahdlatul Ulama (IPPNU) Jati Kulon (@pelajar_kulonan). Bertanggung jawab penuh dalam menyusun content plan organisasi, perancangan desain visual feed yang komunikatif, penulisan caption informatif, hingga penjadwalan serta publikasi konten kegiatan kaderisasi dan keagamaan."
+                            data-tools="Figma, Content Planning, Copywriting, Instagram Management"
+                            data-image="assets/Showcase-ModalDetail-Sosmed-Ipnu.png">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 sm:p-6 space-y-3">
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Social Media Management</span>
+                    <h4 class="text-base sm:text-lg font-bold text-zinc-900">PR IPNU & IPPNU Jati Kulon — Social Media & Content</h4>
+                    <p class="text-xs sm:text-sm text-zinc-500">Penyusunan content plan, desain feed informatif, penulisan caption, hingga publikasi akun @pelajar_kulonan.</p>
+                    <button class="detail-btn text-xs font-bold text-primary hover:underline pt-1 inline-flex items-center gap-1"
+                        data-title="PR IPNU & IPPNU Jati Kulon — Social Media Management"
+                        data-category="Social Media Management"
+                        data-desc="Pengelolaan media sosial resmi Pimpinan Ranting Ikatan Pelajar Nahdlatul Ulama (IPNU) dan Ikatan Pelajar Putri Nahdlatul Ulama (IPPNU) Jati Kulon (@pelajar_kulonan). Bertanggung jawab penuh dalam menyusun content plan organisasi, perancangan desain visual feed yang komunikatif, penulisan caption informatif, hingga penjadwalan serta publikasi konten kegiatan kaderisasi dan keagamaan."
+                        data-tools="Figma, Content Planning, Copywriting, Instagram Management"
+                        data-image="assets/Showcase-ModalDetail-Sosmed-Ipnu.png">
+                        Pelajari Proyek &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+       <!-- Subtext Punchy & Humor di Bawah Galeri Karya -->
+        <div class="mt-12 sm:mt-16 text-center max-w-xl mx-auto px-5 fade-in-up">
+            <div class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-zinc-50 via-orange-50/20 to-zinc-50 border border-zinc-200/80 text-xs sm:text-sm text-zinc-600 shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0 animate-pulse"></span>
+                <span class="font-medium">Sabar, ini baru menu pembuka. Karya lainnya masih banyak, tapi keburu penuh kalau ditaruh semua di sini! 😉</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-16 sm:py-20 bg-zinc-50 px-5 sm:px-6 border-t border-zinc-200/60">
+        <div class="max-w-4xl mx-auto space-y-10">
+            <div class="text-center space-y-2.5">
+                <h2 class="text-xs font-bold tracking-widest text-primary uppercase">Riwayat Karier</h2>
+                <h3 class="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900">Pengalaman Profesional</h3>
+            </div>
+            <div class="space-y-5">
+                <!-- Experience Firdaus Collection -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">Social Media Specialist & Digital Marketing</h4>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">2026 - Sekarang</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">Firdaus Collection (Custom Tas Souvenir Kudus)</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-2">
+                        Mengelola strategi pemasaran digital secara menyeluruh untuk bisnis manufaktur tas souvenir keluarga mulai dari penyusunan <i>content plan</i> bulanan, pembuatan desain grafis <i>feed</i>, penulisan <i>caption</i> yang persuasif, pemotretan katalog produk tas, proses publikasi, hingga pengelolaan kampanye iklan berbayar melalui <i>Meta Ads</i>.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Instagram: @firdauscollection.kudus</span>
+                    </div>
+                </div>
+                <!-- Experience 1 -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">Social Media Specialist</h4>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">2025 - 2026</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">Tim Sosial Media Program Studi Sistem Informasi Semarang</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-2">
+                        Mengelola konten <i>feed</i> media sosial, menyiapkan strategi konten promosi, mendesain brosur/flyer lipat, serta mengoperasikan Meta Ads untuk kampanye iklan bertarget calon mahasiswa baru.
+                    </p>
+                    <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Instagram: @siusmjaya</span>
+                </div>
+
+                <!-- Experience Jobind.id -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">Social Media Specialist</h4>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">2025-2026</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">Jobind.id (PT Digivana Solusi Digital)</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-2">
+                        Merancang dan mengeksekusi strategi digital meliputi penyusunan <i>content plan</i> bulanan, mendesain aset visual <i>feed</i> sosial media yang interaktif, serta menyiapkan konten kampanye iklan berbayar <i>(ads)</i> dengan fokus konversi Call-to-Action (CTA) untuk mendoring pendaftaran user baru di platform Jobind.id.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Instagram: @jobind.id</span>
+                    </div>
+                </div>
+
+                <!-- Experience PR IPNU IPPNU Jati Kulon -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">Social Media Designer</h4>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">2023 - 2026</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">PR IPNU IPPNU Jati Kulon</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-2">
+                        Bertanggung jawab penuh atas pengelolaan media sosial organisasi mulai dari penyusunan <i>content plan</i>, perancangan desain grafis <i>feed</i> yang komunikatif, penulisan <i>caption</i>, hingga proses publikasi konten secara berkala.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Instagram: @pelajar_kulonan</span>
+                    </div>
+                </div>
+
+                <!-- Experience Freelance -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">UI/UX Designer, Graphic Designer & Front-End Developer (Freelance)</h4>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">2022 - Sekarang</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">Project-Based — Klien Individu & UMKM</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-1">
+                        Mengerjakan berbagai proyek digital secara mandiri mulai dari perancangan antarmuka aplikasi/web (UI/UX), pembuatan aset grafis & identitas brand, hingga implementasi kode Front-End yang responsif dan fungsional sesuai kebutuhan klien.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">UI/UX Design</span>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Graphic Design</span>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Front-End Development</span>
+                    </div>
+                </div>
+
+                <!-- Experience Bea Cukai Kudus -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <h4 class="text-base sm:text-lg font-bold text-zinc-900">UI/UX Designer & Front-End Web Developer (PKL)</h4>
+                        <span class="text-xs font-bold bg-zinc-100 text-zinc-600 px-3 py-1 rounded-full w-fit">Okt 2023 - Mar 2024</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-zinc-700">Kantor Bea Cukai Kudus</p>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed py-1">
+                        Bertanggung jawab penuh dalam perancangan antarmuka (UI/UX) sekaligus pengembangan Front-End untuk Website Profil Resmi Kantor Bea Cukai Kudus. Menerjemahkan kebutuhan instansi menjadi tampilan digital yang responsif, rapi, serta menangani berbagai kebutuhan desain visual internal.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">UI/UX Design</span>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Front-End Development</span>
+                        <span class="text-xs font-bold bg-orange-50 text-primary px-3 py-1 rounded-full w-fit">Visual Design</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Feed Marquee Section -->
+    <section class="py-20 sm:py-24 bg-white text-zinc-900 overflow-hidden relative border-y border-zinc-200/60">
+        
+        <!-- Header Section (Humoris & Santai) -->
+        <div class="max-w-4xl mx-auto text-center space-y-3 px-5 mb-12 sm:mb-16">
+            <span class="text-xs font-bold tracking-widest text-primary uppercase">Social Media Showcase</span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">Eksplorasi Feed: <br>Visual Berbicara, Brief Diterjemahkan Sempurna</h2>
+            <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto">Kumpulan karya visual feed Instagram, materi promosi, dan kampanye digital yang lahir dari revisi tanpa henti dan segelas kopi.</p>
+        </div>
+
+        <!-- Marquee Container -->
+        <div class="relative w-full overflow-hidden flex">
+            
+            <!-- Gradient Fade Mask di Kiri & Kanan -->
+            <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+            <!-- Track 1 (Berisi 15 Item Unik) -->
+            <div class="animate-marquee shrink-0 py-4 flex gap-5">
+                
+                <!-- Item 1 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-1.png" alt="Social Media Feed 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 2 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-2.png" alt="Social Media Feed 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 3 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-3.png" alt="Social Media Feed 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 4 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-4.png" alt="Social Media Feed 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 5 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-5.png" alt="Social Media Feed 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 6 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-1.png" alt="Social Media Feed 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 7 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-2.png" alt="Social Media Feed 7" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 8 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-3.png" alt="Social Media Feed 8" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 9 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-4.png" alt="Social Media Feed 9" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 10 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-5.png" alt="Social Media Feed 10" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 11 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-IPNU-1.png" alt="Social Media Feed 11" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 12 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcae-Feed-IPNU-2.png" alt="Social Media Feed 12" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 13 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcae-Feed-IPNU-3.png" alt="Social Media Feed 13" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 14 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcae-Feed-IPNU-4.png" alt="Social Media Feed 14" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <!-- Item 15 -->
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcae-Feed-IPNU-5.png" alt="Social Media Feed 15" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+            </div>
+
+            <!-- Track 2 (Duplikat Persis untuk Efek Infinite Seamless Loop) -->
+            <div class="animate-marquee shrink-0 py-4 flex gap-5" aria-hidden="true">
+                
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-1.png" alt="Social Media Feed 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-2.png" alt="Social Media Feed 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-3.png" alt="Social Media Feed 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-4.png" alt="Social Media Feed 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-5.png" alt="Social Media Feed 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-1.png" alt="Social Media Feed 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-2.png" alt="Social Media Feed 7" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-3.png" alt="Social Media Feed 8" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-4.png" alt="Social Media Feed 9" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-5.png" alt="Social Media Feed 10" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-1.png" alt="Social Media Feed 11" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-2.png" alt="Social Media Feed 12" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-SI-3.png" alt="Social Media Feed 13" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-1.png" alt="Social Media Feed 14" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+
+                <div class="w-[180px] sm:w-[220px] aspect-[4/5] bg-zinc-100 rounded-3xl overflow-hidden shadow-lg border border-zinc-200/80 shrink-0 group relative cursor-pointer">
+                    <img src="assets/Showcase-Feed-Jobind-2.png" alt="Social Media Feed 15" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- Design Workflow Section (Interactive) -->
+    <section class="py-20 sm:py-24 overflow-hidden relative border-y border-zinc-200/65" id="workflow-section">
+        
+        <!-- Header Section -->
+        <div class="max-w-4xl mx-auto text-center space-y-3 px-5 mb-16 sm:mb-20">
+            <span class="text-xs font-bold tracking-widest text-primary uppercase">Alur Kerja & Metodologi</span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">Dari Konsep Desain Hingga Kode Front-End</h2>
+            <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto">Setiap proyek dikerjakan secara sistematis, menggabungkan estetika desain UI/UX dengan ketepatan teknis kode.</p>
+        </div>
+
+        <!-- Interactive Workflow Container -->
+        <div class="max-w-5xl mx-auto px-5 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Column: Interactive Step Selectors (Buttons) -->
+                <div class="lg:col-span-5 flex flex-col space-y-3" id="workflow-tabs">
+                    
+                    <!-- Tab 1 -->
+                    <button onclick="switchWorkflowStep(1)" class="workflow-btn group text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-zinc-900 text-white border-zinc-900 shadow-lg scale-[1.02]" data-step="1">
+                        <div class="flex items-center space-x-4">
+                            <span class="w-10 h-10 rounded-xl bg-primary text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-sm">01</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">Breakdown Brief & Analisis</h4>
+                                <p class="text-xs text-zinc-400 mt-0.5">Fase: Strategi & Riset</p>
+                            </div>
+                        </div>
+                        <span class="text-primary text-lg group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+
+                    <!-- Tab 2 -->
+                    <button onclick="switchWorkflowStep(2)" class="workflow-btn group text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-zinc-50 text-zinc-900 border-zinc-200/80 hover:border-primary/50 hover:bg-zinc-100/60" data-step="2">
+                        <div class="flex items-center space-x-4">
+                            <span class="w-10 h-10 rounded-xl bg-zinc-200 text-zinc-700 font-extrabold text-sm flex items-center justify-center shrink-0 shadow-sm transition-colors group-hover:bg-primary group-hover:text-white">02</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">UI/UX & Desain Visual</h4>
+                                <p class="text-xs text-zinc-500 mt-0.5">Fase: Prototyping Figma</p>
+                            </div>
+                        </div>
+                        <span class="text-zinc-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+
+                    <!-- Tab 3 -->
+                    <button onclick="switchWorkflowStep(3)" class="workflow-btn group text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-zinc-50 text-zinc-900 border-zinc-200/80 hover:border-primary/50 hover:bg-zinc-100/60" data-step="3">
+                        <div class="flex items-center space-x-4">
+                            <span class="w-10 h-10 rounded-xl bg-zinc-200 text-zinc-700 font-extrabold text-sm flex items-center justify-center shrink-0 shadow-sm transition-colors group-hover:bg-primary group-hover:text-white">03</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">Pengembangan Front-End</h4>
+                                <p class="text-xs text-zinc-500 mt-0.5">Fase: Coding & Integrasi</p>
+                            </div>
+                        </div>
+                        <span class="text-zinc-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+
+                    <!-- Tab 4 -->
+                    <button onclick="switchWorkflowStep(4)" class="workflow-btn group text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-zinc-50 text-zinc-900 border-zinc-200/80 hover:border-primary/50 hover:bg-zinc-100/60" data-step="4">
+                        <div class="flex items-center space-x-4">
+                            <span class="w-10 h-10 rounded-xl bg-zinc-200 text-zinc-700 font-extrabold text-sm flex items-center justify-center shrink-0 shadow-sm transition-colors group-hover:bg-primary group-hover:text-white">04</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">Testing & Publikasi</h4>
+                                <p class="text-xs text-zinc-500 mt-0.5">Fase: Delivery</p>
+                            </div>
+                        </div>
+                        <span class="text-zinc-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+
+                </div>
+
+                <!-- Right Column: Interactive Content Display Panel -->
+                <div class="lg:col-span-7">
+                    <div class="relative bg-gradient-to-br from-zinc-50 to-orange-50/30 border border-zinc-200/80 p-8 sm:p-10 rounded-3xl shadow-xl overflow-hidden min-h-[340px] flex flex-col justify-between">
+                        
+                        <!-- Background Decorative Glow -->
+                        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                        <!-- Panel Content -->
+                        <div id="workflow-content-panel" class="transition-all duration-300 transform opacity-100 translate-y-0 relative z-10">
+                            
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-16 h-16 rounded-2xl bg-orange-100 text-primary flex items-center justify-center text-3xl shadow-sm" id="panel-icon">
+                                    📋
+                                </div>
+                                <span class="px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-wider" id="panel-phase">
+                                    Fase: Strategi & Riset
+                                </span>
+                            </div>
+
+                            <div class="space-y-3">
+                                <span class="text-xs font-extrabold text-zinc-400 tracking-widest uppercase" id="panel-step-number">TAHAP 01</span>
+                                <h3 class="text-xl sm:text-2xl font-extrabold text-zinc-900" id="panel-title">
+                                    Breakdown Brief & Analisis
+                                </h3>
+                                <p class="text-sm sm:text-base text-zinc-600 leading-relaxed pt-2" id="panel-desc">
+                                    Membedah kebutuhan klien, menentukan target audiens, merumuskan fitur utama, serta memetakan batasan teknis proyek sejak awal.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Bottom Indicator Progress bar -->
+                        <div class="pt-8 mt-6 border-t border-zinc-200/60 flex items-center justify-between text-xs text-zinc-500 font-medium">
+                            <span id="panel-progress-text">Menampilkan tahap 1 dari 4</span>
+                            <div class="flex space-x-1.5" id="progress-dots">
+                                <div class="w-6 h-2 rounded-full bg-primary transition-all duration-300 dot-indicator" data-dot="1"></div>
+                                <div class="w-2 h-2 rounded-full bg-zinc-300 transition-all duration-300 dot-indicator" data-dot="2"></div>
+                                <div class="w-2 h-2 rounded-full bg-zinc-300 transition-all duration-300 dot-indicator" data-dot="3"></div>
+                                <div class="w-2 h-2 rounded-full bg-zinc-300 transition-all duration-300 dot-indicator" data-dot="4"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Detail Modal -->
+    <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] overflow-y-auto p-5 sm:p-8 shadow-2xl transform scale-95 transition-all duration-300 relative modal-content">
+            <button id="closeModal" class="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-700 font-bold transition-colors shadow-sm">
+                &times;
+            </button>
+            <div class="space-y-4 pr-1 sm:pr-2">
+                <span id="modalCategory" class="text-xs font-bold text-primary uppercase tracking-wider">Kategori</span>
+                <h3 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-zinc-900 pr-8">Judul Proyek</h3>
+                <div class="aspect-[16/9] bg-zinc-100 rounded-2xl flex items-center justify-center border border-zinc-200/60 my-3 relative overflow-hidden">
+                    <img id="modalImage" src="" alt="Pratinjau Studi Kasus Portofolio" class="w-full h-full object-cover">
+                </div>
+                <div class="space-y-1.5 pt-1">
+                    <h4 class="font-bold text-xs text-zinc-400 uppercase tracking-wider">Deskripsi & Studi Kasus</h4>
+                    <div id="modalDesc" class="text-xs sm:text-sm text-zinc-600 leading-relaxed space-y-3">Detail lengkap mengenai proyek ini...</div>
+                </div>
+                <div class="space-y-1.5 pt-2 border-t border-zinc-100">
+                    <h4 class="font-bold text-xs text-zinc-400 uppercase tracking-wider">Tools & Pendekatan</h4>
+                    <p id="modalTools" class="text-xs font-semibold bg-orange-50 text-primary px-3 py-1.5 rounded-xl w-fit">Figma, UI/UX, Prototyping</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 sm:py-24 px-5 sm:px-6 max-w-6xl mx-auto">
+        <div class="text-center space-y-3 mb-12 sm:mb-16">
+            <span class="text-xs font-bold tracking-widest text-primary uppercase">Testimoni Klien</span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900">Apa Kata Mereka?</h2>
+            <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto">Kepercayaan dan kepuasan dari klien serta rekan kerja dalam setiap proyek kolaborasi.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Testimonial Firdaus Collection -->
+            <div class="bg-white p-7 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative group flex flex-col justify-between">
+                <div class="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-primary to-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="space-y-4">
+                    <svg class="w-8 h-8 text-orange-200 group-hover:text-primary transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+                        "Zumar sangat cekatan mengelola media sosial dan digital marketing Firdaus Collection. Mulai dari content plan, foto katalog produk yang estetik, hingga iklan Meta Ads, penjualan tas souvenir kami jadi jauh lebih aktif dan terarah."
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 pt-6 mt-6 border-t border-zinc-100">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-primary font-bold text-xs flex items-center justify-center shrink-0">ID</div>
+                    <div>
+                        <div class="text-xs sm:text-sm font-bold text-zinc-900">Ibu Dwi</div>
+                        <div class="text-[11px] text-zinc-500">Owner, Firdaus Collection Tas Souvenir</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial Prodi Sistem Informasi USM -->
+            <div class="bg-white p-7 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative group flex flex-col justify-between">
+                <div class="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-primary to-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="space-y-4">
+                    <svg class="w-8 h-8 text-orange-200 group-hover:text-primary transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+                        "Zumar menunjukkan dedikasi yang luar biasa sebagai Social Media Specialist di Prodi Sistem Informasi USM. Konten kreatif, pengelolaan publikasi, dan strategi medianya sangat membantu meningkatkan citra positif program studi kepada publik."
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 pt-6 mt-6 border-t border-zinc-100">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-primary font-bold text-xs flex items-center justify-center shrink-0">SR</div>
+                    <div>
+                        <div class="text-xs sm:text-sm font-bold text-zinc-900">Dr. Saifur Rohman Cholil, S.Kom., M.Kom.</div>
+                        <div class="text-[11px] text-zinc-500">Kepala Prodi Sistem Informasi USM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial Andika Natha (CEO & Founder Jobind.id) -->
+            <div class="bg-white p-7 sm:p-8 rounded-3xl border border-zinc-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative group flex flex-col justify-between">
+                <div class="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-primary to-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="space-y-4">
+                    <svg class="w-8 h-8 text-orange-200 group-hover:text-primary transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-xs sm:text-sm text-zinc-600 leading-relaxed italic">
+                        "Zumar memiliki perpaduan skill yang luar biasa antara UI/UX design dan strategi social media marketing. Kontribusi Zumar di Jobind.id dalam membangun visual produk dan kampanye digital sangat membantu pertumbuhan platform kami secara signifikan."
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 pt-6 mt-6 border-t border-zinc-100">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-primary font-bold text-xs flex items-center justify-center shrink-0">AN</div>
+                    <div>
+                        <div class="text-xs sm:text-sm font-bold text-zinc-900">Andika Natha</div>
+                        <div class="text-[11px] text-zinc-500">CEO & Founder Jobind.id</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Coffee & Code Counter Section dengan Ornamen Melayang -->
+<section class="py-24 sm:py-32 bg-white text-zinc-900 overflow-hidden relative border-y border-zinc-200/60">
+    
+    <!-- ORNAMEN MELAYANG (Desainer & Front-End Elements) -->
+    <!-- 1. Pen Tool Badge (Kiri Atas) -->
+    <div class="absolute left-6 sm:left-16 md:left-24 top-10 sm:top-16 hidden sm:flex items-center gap-2.5 bg-white/90 backdrop-blur-md border border-zinc-200 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-slow z-10">
+        <div class="w-7 h-7 rounded-lg bg-orange-50 text-primary flex items-center justify-center font-bold text-xs">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+        <div class="text-left">
+            <div class="text-[11px] font-bold text-zinc-800">Pen Tool</div>
+            <div class="text-[9px] text-zinc-400">Precision Path</div>
+        </div>
+    </div>
+
+    <!-- 2. Layers Figma Badge (Kanan Atas) -->
+    <div class="absolute right-6 sm:right-16 md:right-28 top-12 sm:top-20 hidden sm:flex items-center gap-2.5 bg-zinc-900 text-white px-3.5 py-2 rounded-2xl shadow-xl animate-float-fast z-10">
+        <svg class="w-4 h-4 text-primary fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+        <div class="text-left text-xs">
+            <span class="font-bold text-orange-400">Auto Layout</span> <span class="text-zinc-300">v3.0</span>
+        </div>
+    </div>
+
+    <!-- 3. Color Swatch Badge (Kiri Bawah) -->
+    <div class="absolute left-8 sm:left-20 md:left-32 bottom-12 sm:bottom-20 hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md border border-zinc-200 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-fast z-10">
+        <div class="w-3.5 h-3.5 rounded-full bg-primary ring-2 ring-orange-100"></div>
+        <span class="text-xs font-bold text-zinc-700">#E73F1E (Primary)</span>
+    </div>
+
+    <!-- 4. Vector Node Badge (Kanan Bawah) -->
+    <div class="absolute right-8 sm:right-24 md:right-36 bottom-16 sm:bottom-24 hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md border border-zinc-200 px-3.5 py-2 rounded-2xl shadow-lg shadow-zinc-200/50 animate-float-slow z-10">
+        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        <span class="text-xs font-bold text-zinc-700">Vector Node Active</span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="max-w-4xl mx-auto text-center space-y-3 px-5 mb-14 sm:mb-16 relative z-20">
+        <span class="text-xs font-bold tracking-widest text-primary uppercase">Statistik Nyeleneh</span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">Dibalik Layar & Secangkir Kopi</h2>
+        <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto">Angka-angka jujur yang merangkum suka-duka di balik layar perancangan desain dan baris kode.</p>
+    </div>
+
+    <!-- Stats Grid Container -->
+    <div class="max-w-6xl mx-auto px-5 sm:px-6 relative z-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            
+            <!-- Stat Card 1 -->
+            <div class="bg-zinc-50 border border-zinc-200/80 p-7 sm:p-8 rounded-3xl shadow-sm hover:border-primary hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-primary flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                    ☕
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 group-hover:text-primary transition-colors">
+                        1,420+
+                    </div>
+                    <div class="text-xs sm:text-sm font-semibold text-zinc-700">
+                        Cup Kopi
+                    </div>
+                    <p class="text-xs text-zinc-500 leading-relaxed pt-1">
+                        Bahan bakar utama untuk bertahan hidup saat malam mulai larut dan revisi datang beruntun.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stat Card 2 -->
+            <div class="bg-zinc-50 border border-zinc-200/80 p-7 sm:p-8 rounded-3xl shadow-sm hover:border-primary hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-primary flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                    🔄
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 group-hover:text-primary transition-colors">
+                        ∞
+                    </div>
+                    <div class="text-xs sm:text-sm font-semibold text-zinc-700">
+                        Revisi Diselamatkan
+                    </div>
+                    <p class="text-xs text-zinc-500 leading-relaxed pt-1">
+                        Jumlah tak terhingga dari permintaan "bikin yang simple tapi elegan" yang berhasil dijinakkan.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stat Card 3 -->
+            <div class="bg-zinc-50 border border-zinc-200/80 p-7 sm:p-8 rounded-3xl shadow-sm hover:border-primary hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-primary flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                    💻
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 group-hover:text-primary transition-colors">
+                        3+ Tahun
+                    </div>
+                    <div class="text-xs sm:text-sm font-semibold text-zinc-700">
+                        Jam Terbang
+                    </div>
+                    <p class="text-xs text-zinc-500 leading-relaxed pt-1">
+                        Sangat aktif ngulik Figma untuk visual design & ngulik juga kode Front-End yang rapi dan responsif.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stat Card 4 -->
+            <div class="bg-zinc-50 border border-zinc-200/80 p-7 sm:p-8 rounded-3xl shadow-sm hover:border-primary hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-primary flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                    🎧
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 group-hover:text-primary transition-colors">
+                        100%
+                    </div>
+                    <div class="text-xs sm:text-sm font-semibold text-zinc-700">
+                        Fokus & Vibe Musik
+                    </div>
+                    <p class="text-xs text-zinc-500 leading-relaxed pt-1">
+                        Konsentrasi penuh terjaga berkat alunan playlist favorit saat merancang antarmuka UI/UX maupun merakit kode Front-End.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Contact & Footer Section -->
+    <footer id="contact" class="py-20 sm:py-24 px-5 sm:px-6 bg-white border-t border-zinc-200/60 relative">
+        <div class="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8">
+            <span class="text-xs font-bold tracking-widest text-primary uppercase">Mari Terhubung</span>
+           <h3 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900">
+                Punya Proyek Keren? Mari Bicarakan Sebelum Figma Protes! ☕
+            </h3>
+            <p class="text-sm sm:text-base text-zinc-600 max-w-lg mx-auto">
+                Terbuka lebar untuk kolaborasi desain UI/UX, pengembangan web Front-End, atau diskusi ide kreatif lainnya. Tenang, ngobrolnya santai kok, dijamin nggak pakai sidang skripsi!
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+                <a href="mailto:zumar.ramadhan46@gmail.com" class="w-full sm:w-auto bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-primary/20 text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    zumar.ramadhan46@gmail.com
+                </a>
+                <a href="https://wa.me/6289668046500?text=Halo%20Zumar,%20saya%20tertarik%20untuk%20berdiskusi%20mengenai%20proyek%20web%20atau%20desain." target="_blank" class="w-full sm:w-auto bg-zinc-900 hover:bg-zinc-800 text-white font-semibold px-6 py-3.5 rounded-2xl transition-all shadow-md text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    Diskusi lewat WhatsApp
+                </a>
+            </div>
+
+            <!-- Social Icons -->
+            <div class="flex items-center justify-center gap-4 pt-4">
+                <a href="https://github.com/zumarRamadhan" target="_blank" aria-label="GitHub" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-primary hover:text-white text-zinc-700 flex items-center justify-center transition-all shadow-sm">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/zumar-ramadhan-811554254/" target="_blank" aria-label="LinkedIn" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-primary hover:text-white text-zinc-700 flex items-center justify-center transition-all shadow-sm">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <a href="https://instagram.com/zumar_ramadhan" target="_blank" aria-label="Instagram" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-primary hover:text-white text-zinc-700 flex items-center justify-center transition-all shadow-sm">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.262-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+            </div>
+
+            <div class="pt-8 border-t border-zinc-100 text-xs text-zinc-400">
+                &copy; 2026 Muhammad Zumar Ramadhan. All Rights Reserved.
+            </div>
+        </div>
+
+        <!-- Scroll To Top Button -->
+        <button id="scrollToTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-zinc-900 text-white rounded-full shadow-lg border border-zinc-800 flex items-center justify-center opacity-0 translate-y-4 pointer-events-none transition-all duration-300 hover:bg-primary hover:border-primary hover:scale-110 focus:outline-none" aria-label="Scroll to top">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"></path>
+            </svg>
+        </button>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
