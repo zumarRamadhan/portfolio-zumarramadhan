@@ -20,7 +20,7 @@ Proyek ini dibangun menggunakan teknologi modern tanpa *framework* yang berat ag
 
 - **Markup & Styling:** HTML5, Tailwind CSS
 - **Interactivity:** Vanilla JavaScript (ES6+)
-- **Design & Prototyping:** Figma, Adobe Illustrator
+- **Design & Prototyping:** Figma
 - **Deployment:** GitHub Pages
 
 ---
